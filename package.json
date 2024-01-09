@@ -1,0 +1,40 @@
+{
+  "name": "liga-project",
+  "type": "module",
+  "browserslist": [
+    "last 3 versions",
+    "IE 11",
+    "Firefox ESR"
+  ],
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev --open --host",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "lint": "eslint src/**/* --fix & stylelint src/**/*.scss --fix & editorconfig-checker",
+    "gen:component": "node ./util/component/gen-component"
+  },
+  "dependencies": {
+    "astro": "^4.1.1",
+    "scroll-lock": "2.1.5",
+    "swiper": "9.4.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/parser": "^6.7.2",
+    "astro-icon": "^1.0.2",
+    "autoprefixer": "^10.4.16",
+    "editorconfig-checker": "^5.1.1",
+    "eslint": "^8.50.0",
+    "eslint-plugin-astro": "^0.29.0",
+    "postcss": "^8.4.30",
+    "sass": "^1.67.0",
+    "stylelint": "^15.10.3",
+    "stylelint-config-htmlacademy": "^2.0.4",
+    "stylelint-config-prettier-scss": "^1.0.0",
+    "stylelint-config-standard-scss": "^11.0.0",
+    "stylelint-scss": "^5.2.1",
+    "vite-plugin-sass-glob-import": "3.0.2"
+  }
+}

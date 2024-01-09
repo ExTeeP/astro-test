@@ -1,0 +1,34 @@
+---
+import Container from '@components/Container/Container'
+import Modal from '@components/Modal/Modal'
+import myImage from '@images/mountain.jpg'
+import MainLayout from '@layouts/Main/Main'
+import { Picture } from 'astro:assets'
+---
+
+<MainLayout title="Главная">
+  <Container>
+    <!--
+      Миксин генерирует все изображения из изначальной картинки (х1, х2, webp, avif)
+      нужно только изначально прокинуть картинку х2
+
+      п.с. удалите коммент при подготовке проекта
+    -->
+    <Picture
+      src={myImage}
+      alt='Example image.'
+      quality={'high'}
+      formats={['webp']}
+      fallbackFormat="jpg"
+      width={800}
+      densities={[2]}
+    />
+    <p>hello</p>
+  </Container>
+
+  <Fragment slot="modals">
+    <Modal name='example' >
+      <h1>Example modal</h1>
+    </Modal>
+  </Fragment>
+</MainLayout>
