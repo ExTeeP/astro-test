@@ -24,7 +24,7 @@ import icon from 'astro-icon'
 // https://astro.build/config
 export default defineConfig({
   devToolbar: { enabled: false },
-  site: 'https://exteep.github.io/astro-test',
+  site: 'https://lorganium.ru',
   compressHTML: false,
   output: 'static',
   publicDir: './public',
