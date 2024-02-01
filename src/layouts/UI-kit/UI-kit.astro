@@ -95,9 +95,7 @@ const pageTitle = title ? title : 'UI-kit'
         {
           pageList.map((item) => (
             <li class="ui-nav__item">
-              <a href={`${Astro.site.href}/ui-kit/${item.name}.html`}>
-                {item.title}
-              </a>
+              <a href={`${getCurrentUrl()}/${item.name}.html`}>{item.title}</a>
             </li>
           ))
         }
