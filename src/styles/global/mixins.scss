@@ -112,6 +112,14 @@
   }
 }
 
+@mixin scroll-smooth {
+  @media (prefers-reduced-motion: no-preference) {
+    // Пользователи могут по какой-то причине отключить анимацию в системе.
+    // Например, их укачивает от плавной прокрутки на странице с большим количеством контента
+    scroll-behavior: smooth;
+  }
+}
+
 @mixin visually-hidden {
   position: absolute;
   overflow: hidden;

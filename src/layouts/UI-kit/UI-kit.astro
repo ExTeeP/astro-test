@@ -1,241 +1,646 @@
 ---
+import fs from 'fs'
 import Layout from '@layouts/root/root'
-import Container from '@components/Container/Container'
+import getCurrentUrl from '../../../util/getCurrentUrl.js'
+
+const regexPageName = /(.+)(\.[^.]+)/
+const regexTitle = /const uiPageTitle = (['"])(.*?)\1/
+
+const pageList = fs
+  .readdirSync('./src/pages/ui-kit', { withFileTypes: true })
+  .map((d) => {
+    const fileContent = fs.readFileSync(`${d.path}/${d.name}`, 'utf-8')
+    return {
+      title: regexTitle.exec(fileContent) && regexTitle.exec(fileContent)[2],
+      name: regexPageName.exec(d.name) && regexPageName.exec(d.name)[1]
+    }
+  })
+
+const { title } = Astro.props
+const metaTitle = title ? `UI-kit - ${title}` : 'UI-kit'
+const pageTitle = title ? title : 'UI-kit'
 ---
 
-<Layout title="UI-Kit">
-  <header class="ui-header">
-    <Container>
-      <div class="ui-header__logo">
-        <svg
-          xmlns="https://www.w3.org/2000/svg"
-          width="192"
-          fill="none"
-          viewBox="0 0 192 24"
-        >
-          <path
-            fill="#0B0B0B"
-            d="M37.257.387 30.35 12.314l-1.048 2.27.238-2.028-.048-12.17h-5.288v23.47h4.86l6.955-12.17.953-2.124-.19 1.883.047 12.41h5.289L42.069.387h-4.812ZM10.577.387H8.004L0 23.855h5.336L10.434 7.1l5.097 16.756h5.575L13.102.387h-2.525ZM62.888.387H47.881v23.468h5.288V5.747h9.72V.387ZM77.704 23.855h5.574L75.274.387H70.13l-8.004 23.42h5.336l1.334-4.443h7.527l1.382 4.491Zm-7.48-8.837 2.43-7.92 2.382 7.92h-4.812Z"
-          ></path>
-          <path
-            fill="#2C39F2"
-            d="M90.807.387v17.432l8.956 5.94 9.005-5.94V.387H90.807Z"></path>
-          <path
-            fill="#fff"
-            d="M104.956 13.714c.191 0 .382 0 .572-.097v1.932c-.476.145-1.096.29-1.667.29-1.048 0-1.858-.387-2.287-1.16-1.048.773-2.24 1.256-3.812 1.208-1.953 0-3.668-1.16-3.62-3.187.047-2.608 2.525-3.38 4.62-3.38.81 0 1.764.144 2.478.29v-.387c0-1.014-.81-1.739-2.477-1.739-1.43 0-2.716.338-3.716.725v-2.56c.857-.29 2.477-.676 4.05-.627 3.144.048 5.145 1.303 5.097 4.684l-.048 3.283c.096.58.429.725.81.725Zm-8.146-1.16c0 .822.762 1.401 1.81 1.401.953 0 1.81-.241 2.62-.87v-1.738c-.524-.144-1.286-.29-1.953-.29-1.286 0-2.477.387-2.477 1.498Z"
-          ></path>
-          <path
-            fill="#0B0B0B"
-            d="M121.442 8.789h-.524c-.62 0-1.144-.097-1.62-.29a4.533 4.533 0 0 1-1.239-.773c-.333-.29-.572-.724-.762-1.207-.191-.483-.238-.966-.238-1.497 0-.531.095-1.062.285-1.497.191-.435.429-.87.763-1.207.333-.338.762-.58 1.238-.773.477-.193 1.049-.29 1.62-.29h.524V0h.81v1.207h.524c.62 0 1.144.097 1.62.29.477.193.905.483 1.239.773.333.29.572.724.762 1.207.191.483.286.966.286 1.497 0 .53-.095 1.062-.286 1.497-.19.434-.429.869-.762 1.207-.334.338-.715.58-1.239.773-.476.193-1.048.29-1.62.29h-.524v1.207h-.81v-1.16h-.047Zm0-.676V1.835h-.524c-.477 0-.906.097-1.287.241a3.168 3.168 0 0 0-.953.58 2.243 2.243 0 0 0-.619.87 2.55 2.55 0 0 0-.19 1.013v.821c0 .338.047.676.19 1.014.143.338.334.628.619.87.286.24.572.434.953.579.381.145.81.241 1.287.241h.524v.049Zm1.334 0c.476 0 .857-.097 1.238-.242.382-.145.715-.338.953-.58.238-.24.477-.53.62-.869a2.55 2.55 0 0 0 .19-1.014v-.82a2.55 2.55 0 0 0-.19-1.015 2.235 2.235 0 0 0-.62-.869 3.155 3.155 0 0 0-.953-.58 3.536 3.536 0 0 0-1.238-.24h-.524V8.16h.524v-.048ZM129.35 9.61V.337h3.668c.81 0 1.429.241 1.858.676.429.483.619 1.11.619 1.883 0 .821-.19 1.449-.619 1.883-.429.483-1.048.677-1.858.677h-2.858v4.056h-.81v.096Zm.81-4.781h2.858c.524 0 .953-.145 1.239-.435.286-.29.429-.676.429-1.11v-.677c0-.434-.143-.82-.429-1.11-.286-.29-.667-.435-1.239-.435h-2.858V4.83ZM141.356 9.755c-1.191 0-2.096-.387-2.811-1.208-.667-.82-1-1.98-1-3.573 0-1.594.333-2.753 1-3.573.667-.821 1.62-1.208 2.811-1.208 1.191 0 2.097.387 2.764 1.208.667.82 1 1.98 1 3.573 0 1.545-.333 2.752-1 3.573-.667.821-1.573 1.208-2.764 1.208Zm0-.676c.429 0 .858-.097 1.191-.242.382-.145.667-.386.906-.676.238-.29.476-.676.619-1.11.143-.435.19-.918.19-1.498V4.394c0-.53-.047-1.062-.19-1.496-.143-.435-.334-.821-.619-1.111a2.496 2.496 0 0 0-.906-.676 3.082 3.082 0 0 0-1.191-.242 3.09 3.09 0 0 0-1.191.242c-.381.145-.667.386-.953.676-.285.29-.476.676-.619 1.11-.143.435-.191.918-.191 1.497v1.16c0 .53.048 1.062.191 1.496.143.435.334.821.619 1.111.239.29.572.531.953.676a3.09 3.09 0 0 0 1.191.242ZM153.837 5.263h-5.097V9.61h-.81V.338h.81v4.201h5.097V.338h.81v9.271h-.81V5.263ZM160.84 1.062V9.61h-.81V1.062h-3.096V.338h7.003v.724h-3.097ZM166.178 9.61V.337h5.431v.724h-4.621V4.54h4.383v.724h-4.383v3.622h4.621v.724h-5.431ZM180.376 5.263h-5.097V9.61h-.81V.338h.81v4.201h5.097V.338h.81v9.271h-.81V5.263ZM183.281 8.885h.953c.429-.58.715-1.352.953-2.318s.333-2.173.333-3.622V.338h5.241v8.547H192v2.704h-.762V9.61h-7.194v1.98h-.763V8.885Zm6.67 0V1.062h-3.668v1.98c0 1.449-.096 2.656-.286 3.622-.191.966-.477 1.69-.81 2.221v.048h4.764v-.048ZM124.156 23.855l-1.001-2.898h-3.954l-1 2.898h-.81l3.287-9.272h1l3.288 9.272h-.81Zm-3.002-8.5h-.047l-1.715 4.926h3.525l-1.763-4.925ZM127.492 23.13h1.286l.524-1.304-3.478-7.243h.858l2.334 4.877.62 1.352h.047l.524-1.4 1.954-4.829h.81l-3.383 8.45c-.143.339-.286.532-.476.677-.191.096-.429.145-.763.145h-.857v-.725ZM138.258 15.307v8.548h-.81v-8.548h-3.096v-.724h7.003v.724h-3.097ZM146.549 24c-1.144 0-2.049-.386-2.668-1.207-.62-.821-.953-1.98-.953-3.573 0-1.546.333-2.753.953-3.574.619-.82 1.524-1.255 2.668-1.255.762 0 1.381.193 1.905.53.524.339.905.822 1.191 1.45l-.667.386a2.873 2.873 0 0 0-.905-1.207c-.429-.29-.905-.435-1.477-.435-.857 0-1.524.29-2.048.917-.477.628-.715 1.497-.715 2.656V19.8c0 1.159.238 2.028.715 2.608.476.579 1.143.917 2.048.917.62 0 1.144-.145 1.572-.483.429-.29.715-.724.953-1.255l.667.386c-.286.628-.667 1.159-1.191 1.497-.667.338-1.286.531-2.048.531ZM155.409 23.999c-1.191 0-2.096-.387-2.811-1.207-.667-.821-1-1.98-1-3.574 0-1.593.333-2.752 1-3.573.667-.821 1.62-1.207 2.811-1.207 1.191 0 2.096.386 2.763 1.207.667.82 1.001 1.98 1.001 3.573 0 1.545-.334 2.753-1.001 3.573-.667.821-1.572 1.208-2.763 1.208Zm0-.676c.429 0 .858-.097 1.191-.242.381-.145.667-.386.905-.676.239-.29.477-.676.62-1.11.143-.435.19-.918.19-1.497v-1.16c0-.53-.047-1.062-.19-1.496-.143-.435-.334-.821-.62-1.111a2.484 2.484 0 0 0-.905-.676 3.081 3.081 0 0 0-1.191-.242c-.429 0-.858.097-1.191.242-.381.145-.667.386-.953.676-.286.29-.476.676-.619 1.11-.143.435-.191.918-.191 1.498v1.159c0 .53.048 1.062.191 1.497.143.434.333.82.619 1.11.238.29.572.531.953.676.333.145.762.242 1.191.242ZM162.031 23.855v-9.272h3.669c.81 0 1.429.242 1.858.676.429.483.619 1.11.619 1.883 0 .821-.19 1.449-.619 1.884-.429.483-1.048.676-1.858.676h-2.859v4.056h-.81v.097Zm.81-4.781h2.859c.524 0 .953-.145 1.238-.435.286-.29.429-.676.429-1.11V16.9c0-.435-.143-.821-.429-1.11-.285-.29-.667-.435-1.238-.435h-2.859v3.718ZM173.847 24c-1.143 0-2.048-.386-2.668-1.207-.619-.821-.952-1.98-.952-3.573 0-1.546.333-2.753.952-3.574.62-.82 1.525-1.255 2.668-1.255.763 0 1.382.193 1.906.53.524.339.905.822 1.191 1.45l-.667.386a2.873 2.873 0 0 0-.905-1.207c-.429-.29-.905-.435-1.477-.435-.858 0-1.525.29-2.049.917-.476.628-.714 1.497-.714 2.656V19.8c0 1.159.238 2.028.714 2.608.477.579 1.144.917 2.049.917.619 0 1.143-.145 1.572-.483.429-.29.715-.724.953-1.255l.667.386c-.286.628-.667 1.159-1.191 1.497-.667.338-1.334.531-2.049.531Z"
-          ></path>
-        </svg>
-      </div>
-    </Container>
-  </header>
-  <main>
-    <slot />
-    <div class="ui-nav" data-ui-nav>
-      <ul></ul>
-      <button class="ui-nav__toggle" data-ui-nav-toggle>+</button>
+<Layout title={metaTitle}>
+  <div class="ui" data-ui>
+    <div class="ui__content" data-ui-content>
+      <header class="ui__header" data-fix-block>
+        <div class="ui-container">
+          <a href=`${getCurrentUrl()}/sitemap.html` class="ui__header-logo">
+            <svg
+              xmlns="https://www.w3.org/2000/svg"
+              width="192"
+              fill="none"
+              viewBox="0 0 192 24"
+            >
+              <path
+                fill="#0B0B0B"
+                d="M37.257.387 30.35 12.314l-1.048 2.27.238-2.028-.048-12.17h-5.288v23.47h4.86l6.955-12.17.953-2.124-.19 1.883.047 12.41h5.289L42.069.387h-4.812ZM10.577.387H8.004L0 23.855h5.336L10.434 7.1l5.097 16.756h5.575L13.102.387h-2.525ZM62.888.387H47.881v23.468h5.288V5.747h9.72V.387ZM77.704 23.855h5.574L75.274.387H70.13l-8.004 23.42h5.336l1.334-4.443h7.527l1.382 4.491Zm-7.48-8.837 2.43-7.92 2.382 7.92h-4.812Z"
+              ></path>
+              <path
+                fill="#2C39F2"
+                d="M90.807.387v17.432l8.956 5.94 9.005-5.94V.387H90.807Z"
+              ></path>
+              <path
+                fill="#fff"
+                d="M104.956 13.714c.191 0 .382 0 .572-.097v1.932c-.476.145-1.096.29-1.667.29-1.048 0-1.858-.387-2.287-1.16-1.048.773-2.24 1.256-3.812 1.208-1.953 0-3.668-1.16-3.62-3.187.047-2.608 2.525-3.38 4.62-3.38.81 0 1.764.144 2.478.29v-.387c0-1.014-.81-1.739-2.477-1.739-1.43 0-2.716.338-3.716.725v-2.56c.857-.29 2.477-.676 4.05-.627 3.144.048 5.145 1.303 5.097 4.684l-.048 3.283c.096.58.429.725.81.725Zm-8.146-1.16c0 .822.762 1.401 1.81 1.401.953 0 1.81-.241 2.62-.87v-1.738c-.524-.144-1.286-.29-1.953-.29-1.286 0-2.477.387-2.477 1.498Z"
+              ></path>
+              <path
+                fill="#0B0B0B"
+                d="M121.442 8.789h-.524c-.62 0-1.144-.097-1.62-.29a4.533 4.533 0 0 1-1.239-.773c-.333-.29-.572-.724-.762-1.207-.191-.483-.238-.966-.238-1.497 0-.531.095-1.062.285-1.497.191-.435.429-.87.763-1.207.333-.338.762-.58 1.238-.773.477-.193 1.049-.29 1.62-.29h.524V0h.81v1.207h.524c.62 0 1.144.097 1.62.29.477.193.905.483 1.239.773.333.29.572.724.762 1.207.191.483.286.966.286 1.497 0 .53-.095 1.062-.286 1.497-.19.434-.429.869-.762 1.207-.334.338-.715.58-1.239.773-.476.193-1.048.29-1.62.29h-.524v1.207h-.81v-1.16h-.047Zm0-.676V1.835h-.524c-.477 0-.906.097-1.287.241a3.168 3.168 0 0 0-.953.58 2.243 2.243 0 0 0-.619.87 2.55 2.55 0 0 0-.19 1.013v.821c0 .338.047.676.19 1.014.143.338.334.628.619.87.286.24.572.434.953.579.381.145.81.241 1.287.241h.524v.049Zm1.334 0c.476 0 .857-.097 1.238-.242.382-.145.715-.338.953-.58.238-.24.477-.53.62-.869a2.55 2.55 0 0 0 .19-1.014v-.82a2.55 2.55 0 0 0-.19-1.015 2.235 2.235 0 0 0-.62-.869 3.155 3.155 0 0 0-.953-.58 3.536 3.536 0 0 0-1.238-.24h-.524V8.16h.524v-.048ZM129.35 9.61V.337h3.668c.81 0 1.429.241 1.858.676.429.483.619 1.11.619 1.883 0 .821-.19 1.449-.619 1.883-.429.483-1.048.677-1.858.677h-2.858v4.056h-.81v.096Zm.81-4.781h2.858c.524 0 .953-.145 1.239-.435.286-.29.429-.676.429-1.11v-.677c0-.434-.143-.82-.429-1.11-.286-.29-.667-.435-1.239-.435h-2.858V4.83ZM141.356 9.755c-1.191 0-2.096-.387-2.811-1.208-.667-.82-1-1.98-1-3.573 0-1.594.333-2.753 1-3.573.667-.821 1.62-1.208 2.811-1.208 1.191 0 2.097.387 2.764 1.208.667.82 1 1.98 1 3.573 0 1.545-.333 2.752-1 3.573-.667.821-1.573 1.208-2.764 1.208Zm0-.676c.429 0 .858-.097 1.191-.242.382-.145.667-.386.906-.676.238-.29.476-.676.619-1.11.143-.435.19-.918.19-1.498V4.394c0-.53-.047-1.062-.19-1.496-.143-.435-.334-.821-.619-1.111a2.496 2.496 0 0 0-.906-.676 3.082 3.082 0 0 0-1.191-.242 3.09 3.09 0 0 0-1.191.242c-.381.145-.667.386-.953.676-.285.29-.476.676-.619 1.11-.143.435-.191.918-.191 1.497v1.16c0 .53.048 1.062.191 1.496.143.435.334.821.619 1.111.239.29.572.531.953.676a3.09 3.09 0 0 0 1.191.242ZM153.837 5.263h-5.097V9.61h-.81V.338h.81v4.201h5.097V.338h.81v9.271h-.81V5.263ZM160.84 1.062V9.61h-.81V1.062h-3.096V.338h7.003v.724h-3.097ZM166.178 9.61V.337h5.431v.724h-4.621V4.54h4.383v.724h-4.383v3.622h4.621v.724h-5.431ZM180.376 5.263h-5.097V9.61h-.81V.338h.81v4.201h5.097V.338h.81v9.271h-.81V5.263ZM183.281 8.885h.953c.429-.58.715-1.352.953-2.318s.333-2.173.333-3.622V.338h5.241v8.547H192v2.704h-.762V9.61h-7.194v1.98h-.763V8.885Zm6.67 0V1.062h-3.668v1.98c0 1.449-.096 2.656-.286 3.622-.191.966-.477 1.69-.81 2.221v.048h4.764v-.048ZM124.156 23.855l-1.001-2.898h-3.954l-1 2.898h-.81l3.287-9.272h1l3.288 9.272h-.81Zm-3.002-8.5h-.047l-1.715 4.926h3.525l-1.763-4.925ZM127.492 23.13h1.286l.524-1.304-3.478-7.243h.858l2.334 4.877.62 1.352h.047l.524-1.4 1.954-4.829h.81l-3.383 8.45c-.143.339-.286.532-.476.677-.191.096-.429.145-.763.145h-.857v-.725ZM138.258 15.307v8.548h-.81v-8.548h-3.096v-.724h7.003v.724h-3.097ZM146.549 24c-1.144 0-2.049-.386-2.668-1.207-.62-.821-.953-1.98-.953-3.573 0-1.546.333-2.753.953-3.574.619-.82 1.524-1.255 2.668-1.255.762 0 1.381.193 1.905.53.524.339.905.822 1.191 1.45l-.667.386a2.873 2.873 0 0 0-.905-1.207c-.429-.29-.905-.435-1.477-.435-.857 0-1.524.29-2.048.917-.477.628-.715 1.497-.715 2.656V19.8c0 1.159.238 2.028.715 2.608.476.579 1.143.917 2.048.917.62 0 1.144-.145 1.572-.483.429-.29.715-.724.953-1.255l.667.386c-.286.628-.667 1.159-1.191 1.497-.667.338-1.286.531-2.048.531ZM155.409 23.999c-1.191 0-2.096-.387-2.811-1.207-.667-.821-1-1.98-1-3.574 0-1.593.333-2.752 1-3.573.667-.821 1.62-1.207 2.811-1.207 1.191 0 2.096.386 2.763 1.207.667.82 1.001 1.98 1.001 3.573 0 1.545-.334 2.753-1.001 3.573-.667.821-1.572 1.208-2.763 1.208Zm0-.676c.429 0 .858-.097 1.191-.242.381-.145.667-.386.905-.676.239-.29.477-.676.62-1.11.143-.435.19-.918.19-1.497v-1.16c0-.53-.047-1.062-.19-1.496-.143-.435-.334-.821-.62-1.111a2.484 2.484 0 0 0-.905-.676 3.081 3.081 0 0 0-1.191-.242c-.429 0-.858.097-1.191.242-.381.145-.667.386-.953.676-.286.29-.476.676-.619 1.11-.143.435-.191.918-.191 1.498v1.159c0 .53.048 1.062.191 1.497.143.434.333.82.619 1.11.238.29.572.531.953.676.333.145.762.242 1.191.242ZM162.031 23.855v-9.272h3.669c.81 0 1.429.242 1.858.676.429.483.619 1.11.619 1.883 0 .821-.19 1.449-.619 1.884-.429.483-1.048.676-1.858.676h-2.859v4.056h-.81v.097Zm.81-4.781h2.859c.524 0 .953-.145 1.238-.435.286-.29.429-.676.429-1.11V16.9c0-.435-.143-.821-.429-1.11-.285-.29-.667-.435-1.238-.435h-2.859v3.718ZM173.847 24c-1.143 0-2.048-.386-2.668-1.207-.619-.821-.952-1.98-.952-3.573 0-1.546.333-2.753.952-3.574.62-.82 1.525-1.255 2.668-1.255.763 0 1.382.193 1.906.53.524.339.905.822 1.191 1.45l-.667.386a2.873 2.873 0 0 0-.905-1.207c-.429-.29-.905-.435-1.477-.435-.858 0-1.525.29-2.049.917-.476.628-.714 1.497-.714 2.656V19.8c0 1.159.238 2.028.714 2.608.477.579 1.144.917 2.049.917.619 0 1.143-.145 1.572-.483.429-.29.715-.724.953-1.255l.667.386c-.286.628-.667 1.159-1.191 1.497-.667.338-1.334.531-2.049.531Z"
+              ></path>
+            </svg>
+          </a>
+
+          <button
+            class="ui-burger"
+            type="button"
+            data-ui-burger
+            aria-pressed="false"
+          >
+            <span class="ui-burger__line"></span>
+          </button>
+        </div>
+      </header>
+      <main>
+        <div class="ui__page-head">
+          <div class="ui-container">
+            <h1 class="ui__title ui__title--main" set:html={pageTitle} />
+          </div>
+        </div>
+        <slot />
+      </main>
+      <footer class="ui__footer">
+        <div class="ui-container">
+          <p class="ui__footer-text">Из Санкт-Петербурга<br />с любовью</p>
+        </div>
+      </footer>
     </div>
-  </main>
-  <footer class="ui-footer">
-    <Container>
-      <p class="ui-footer__text">Из Санкт-Петербурга<br />с любовью</p>
-    </Container>
-  </footer>
+  </div>
+  <dialog class="ui-dialog" aria-label="Навигация" inert data-ui-nav-dialog>
+    <nav class="ui-nav">
+      <header class="ui-nav__header">
+        <a class="ui-nav__title" href=`${getCurrentUrl()}/ui-kit.html`>UI-Kit</a
+        >
+        <button
+          class="ui-burger ui-burger--close"
+          type="button"
+          data-ui-burger-close
+          aria-pressed="true"
+        >
+          <span class="ui-burger__line"></span>
+        </button>
+      </header>
+      <ul class="ui-nav__list">
+        {
+          pageList.map((item) => (
+            <li class="ui-nav__item">
+              <a href={`${Astro.site.href}/ui-kit/${item.name}.html`}>
+                {item.title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </dialog>
 </Layout>
 
+<slot name="modals" />
+
 <style is:inline>
-  .ui {
-    padding-top: 10px;
-    padding-bottom: 30px;
+  :root {
+    --ui-color-bg-first: #f2f2f2;
+    --ui-color-bg-second: #2e2f37;
+    --ui-color-text-first: #58485e;
+    --ui-color-text-second: #6f469d;
+    --ui-color-white: #ffffff;
+    --ui-color-text-second-a80: rgba(111, 70, 157, 0.8);
+    --ui-color-border-first: #b8b1b9;
+    --ui-color-border-second: #c28cff;
+    --ui-container-offset: 40px;
+    --ui-fixed-menu-width: 400px;
   }
+
+  html,
+  body {
+    scroll-behavior: auto;
+  }
+
+  body {
+    overscroll-behavior: none;
+  }
+
+  .scroll-lock {
+    overflow: hidden;
+    padding-right: var(--scrollbar-width, 0);
+  }
+
+  .ui-container {
+    margin: 0 auto;
+    padding: 0 var(--ui-container-offset);
+    max-width: 1600px;
+    width: 100%;
+  }
+
+  /* Бургер */
+  .ui-burger {
+    position: relative;
+    margin-left: auto;
+    padding: 0;
+    height: 30px;
+    width: 30px;
+    display: block;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .ui-burger::before,
+  .ui-burger::after {
+    content: '';
+  }
+
+  .ui-burger::before,
+  .ui-burger__line,
+  .ui-burger::after {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    border-radius: calc(2px / 2);
+    background-color: #7b52b9;
+    opacity: 1;
+    transition: 0.3s ease-in-out;
+    transition-property: top, opacity, transform;
+  }
+  .ui-burger::before {
+    top: 10%;
+  }
+
+  .ui-burger__line {
+    top: 50%;
+  }
+
+  .ui-burger::after {
+    top: 90%;
+  }
+
+  .ui-burger--close::before {
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  .ui-burger--close .ui-burger__line {
+    top: 50%;
+    transform: translateY(-50%) rotate(-45deg);
+  }
+
+  .ui-burger--close::after {
+    content: none;
+  }
+
+  .ui {
+    position: relative;
+  }
+
+  .ui.scroll-lock .ui-nav {
+    transform: translateX(0);
+    overscroll-behavior: contain;
+  }
+
+  .ui__content {
+    display: grid;
+    min-height: 100vh;
+    min-height: 100svh;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  .ui__page-head {
+    padding-top: 40px;
+  }
+
+  .ui__content main {
+    flex-grow: 1;
+  }
+
+  .ui__header {
+    top: 0;
+    position: sticky;
+    padding: 25px 0;
+    width: 100%;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--ui-color-border-second);
+    z-index: 10;
+    background-color: var(--ui-color-white);
+  }
+
+  .ui__header .ui-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .ui__header-logo {
+    display: block;
+    width: 192px;
+    height: 24px;
+  }
+
+  .ui__header-logo svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .ui__footer {
+    padding: 12px 0 20px;
+    flex-shrink: 0;
+    width: 100%;
+    border-top: 1px solid var(--ui-color-border-second);
+  }
+
+  .ui__footer-text {
+    text-align: right;
+    font-size: 16px;
+    line-height: 19px;
+    opacity: 0.6;
+  }
+
   .ui__title {
     margin: 0;
     margin-bottom: 20px;
     position: relative;
     font-size: 28px;
     line-height: 1.2;
-    text-decoration: underline;
+    color: var(--ui-color-text-second);
   }
+
+  .ui__title--main {
+    margin-bottom: 30px;
+    font-size: 45px;
+    overflow: hidden;
+  }
+
   .ui__text {
     margin: 0;
     font-size: 18px;
     margin-bottom: 12px;
   }
-  .ui [data-ui-section] {
+
+  .ui__section {
+    margin-bottom: 48px;
+  }
+
+  .ui__section .ui-container {
     display: grid;
-    gap: 15px;
-    padding: 30px 30px 35px;
+    grid-template-columns: 100%;
+    gap: 40px;
+  }
+
+  .ui__section:not(:has(.ui-container)) {
+    display: grid;
+    grid-template-columns: 100%;
+    gap: 40px;
+  }
+
+  .ui__component-wrap {
+    padding: 30px var(--ui-container-offset) 35px;
     border-radius: 16px;
-    background-color: #f8f5fc;
+    background-color: var(--ui-color-bg-first);
   }
-  .ui [data-ui-section]:not(:last-child) {
-    margin-bottom: 45px;
+
+  .ui__section:not(:has(.ui-container)) .ui__component-wrap {
+    border-radius: 0;
   }
-  .ui__mod-wrap {
-    margin: 0 -15px;
-    padding: 15px;
-    display: grid;
-    gap: 15px;
-    border-radius: 8px;
+
+  .ui__component-wrap--dark {
+    color: var(--ui-color-white);
+    background-color: var(--ui-color-bg-second);
   }
-  .ui__mod-wrap--dark {
-    background-color: #2e2f37;
-    color: #ffffff;
+
+  .ui__component--full {
+    margin: 0 calc(var(--ui-container-offset) * -1);
   }
-  .ui-title {
-    margin-bottom: 30px;
-    font-size: 45px;
-    line-height: 1.2;
-    color: #58485e;
+
+  .ui__component-wrap .ui-code {
+    margin-top: 24px;
   }
-  .ui-nav {
+
+  /* Диалог */
+  .ui-dialog {
+    padding: 0;
+    width: var(--ui-fixed-menu-width);
+    display: block;
+    height: auto;
     position: fixed;
-    z-index: 100;
-    right: 20px;
-    bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-  }
-  .ui-nav.is-open ul {
-    opacity: 1;
-    pointer-events: all;
-  }
-  .ui-nav__toggle {
-    position: relative;
-    bottom: 10px;
-    right: 10px;
-    z-index: 2;
-    width: 34px;
-    height: 34px;
-    background-color: #f8f5fc;
-    border: 2px solid #58485e;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 24px;
-    line-height: 1;
-    color: #58485e;
-    opacity: 0.4;
-    transition:
-      opacity 0.3s ease,
-      border-color 0.3s ease;
-  }
-  .ui-nav__toggle:hover {
-    opacity: 1;
-    border-color: #b8b1b9;
-  }
-  .ui-nav ul {
-    position: absolute;
+    top: 0;
     right: 0;
-    bottom: calc(100% - 34px);
-    list-style: none;
-    max-height: 500px;
-    padding: 15px;
-    margin: 0;
-    background-color: #f8f5fc;
-    border: 2px solid #b8b1b9;
-    border-radius: 18px;
-    transition: opacity 0.3s ease;
+    bottom: 0;
+    left: auto;
+    border: none;
+    border-left: 1px solid var(--ui-color-border-second);
+    background-color: var(--ui-color-white);
+    transform: translateX(100%);
+    transition: transform 0.5s ease;
+    outline: none;
+    z-index: 20;
+  }
+
+  .ui-dialog::backdrop {
+    opacity: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    backdrop-filter: blur(0);
+    background-color: rgba(40, 44, 52, 0);
+    z-index: 1000;
     opacity: 0;
     pointer-events: none;
-    overflow-y: auto;
+    transition: 0.3s ease;
+    transition-property: backdrop-filter, background-color;
   }
-  .ui-nav ul::-webkit-scrollbar {
-    display: none;
-  }
-  .ui-nav ul::after {
-    content: 'Навигация';
-    margin-bottom: -37px;
-    margin-top: 30px;
-    display: block;
-    font-size: 14px;
-    color: #58485e;
-    opacity: 0.6;
-  }
-  .ui-nav ul li:not(:last-child) {
-    margin-bottom: 13px;
-  }
-  .ui-nav ul a {
-    color: #58485e;
-    font-size: 18px;
+
+  body:has(.ui-dialog[open])::after {
     opacity: 1;
-    transition: opacity 0.3s ease;
+    backdrop-filter: blur(10px);
+    background-color: rgba(40, 44, 52, 0.7);
   }
-  .ui-nav ul a:hover {
-    opacity: 0.7;
+
+  .ui-dialog[open] {
+    transform: translateX(0);
   }
-  .ui-header {
+
+  /* Навигация */
+  .ui-nav {
+    padding: 25px 15px;
+    height: 100%;
+  }
+
+  .ui-nav__header {
     display: flex;
     align-items: center;
+    gap: 16px;
+  }
+
+  .ui-nav__title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--ui-color-text-second);
+    transition: opacity 0.3s ease;
+  }
+
+  .ui-nav__title:hover {
+    opacity: 0.7;
+  }
+
+  .ui-nav__list {
+    margin: 24px 0 0;
+    padding: 0;
+    color: var(--ui-color-text-second);
+    font-size: 18px;
+    overflow-y: auto;
+    list-style: none;
+    scrollbar-color: var(--ui-color-text-second) transparent;
+    scrollbar-width: thin;
+  }
+
+  .ui-nav__list::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .ui-nav__list::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  .ui-nav__list::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    background-color: var(--ui-color-text-second);
+    border: 2px solid var(--ui-color-bg-first);
+  }
+
+  .ui-nav__list::-webkit-scrollbar-thumb:hover {
+    background-color: var(--ui-color-text-second-a80);
+  }
+
+  .ui-nav__list li:not(:last-child) {
+    margin-bottom: 13px;
+  }
+
+  .ui-nav__item a {
+    color: inherit;
+    transition: opacity 0.3s ease;
+  }
+
+  .ui-nav__item a:hover {
+    opacity: 0.7;
+  }
+
+  /* Блок кода */
+  .ui-code {
+    margin: 0;
+    color: var(--ui-color-text-second);
+  }
+
+  .ui-code__header {
+    display: flex;
+    color: #6f469d;
+    font-family: monospace;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .ui-code__tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ui-code__tab:not(:last-child) {
+    margin-right: -20px;
+    padding: 5px 40px 5px 20px;
+  }
+
+  .ui-code__title {
+    padding: 5px 40px 5px 20px;
+    border: 1px solid var(--ui-color-border-second);
+    border-right: none;
+    border-bottom: none;
+    background-color: #e3d6f2;
+    border-radius: 16px 0 0 0;
+  }
+
+  .ui-code__copy {
+    padding: 5px 20px;
+    display: flex;
+    color: inherit;
+    border: 1px solid var(--ui-color-border-second);
+    border-bottom: none;
+    background-color: #e3d6f2;
+    border-radius: 16px 16px 0 0;
+    transition: 0.3s ease;
+    transition-property: background-color, color, opacity;
+    cursor: pointer;
+  }
+
+  .ui-code__copy:hover {
+    color: #4d00a6;
+    background-color: var(--ui-color-border-second);
+  }
+
+  .ui-code__copy::before {
+    content: '';
     width: 100%;
-    height: 80px;
+    height: 100%;
+    display: block;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800' fill='none' viewBox='0 0 24 24'%3E%3Cpath fill='%23282C34' fill-rule='evenodd' d='M15 1.25h-4.056c-1.838 0-3.294 0-4.433.153-1.172.158-2.121.49-2.87 1.238-.748.749-1.08 1.698-1.238 2.87-.153 1.14-.153 2.595-.153 4.433V16a3.751 3.751 0 0 0 3.166 3.705c.137.764.402 1.416.932 1.947.602.602 1.36.86 2.26.982.867.116 1.97.116 3.337.116h3.11c1.367 0 2.47 0 3.337-.116.9-.122 1.658-.38 2.26-.982.602-.602.86-1.36.982-2.26.116-.867.116-1.97.116-3.337v-5.11c0-1.367 0-2.47-.116-3.337-.122-.9-.38-1.658-.982-2.26-.531-.53-1.183-.795-1.947-.932A3.751 3.751 0 0 0 15 1.25Zm2.13 3.021A2.25 2.25 0 0 0 15 2.75h-4c-1.907 0-3.261.002-4.29.14-1.005.135-1.585.389-2.008.812-.423.423-.677 1.003-.812 2.009-.138 1.028-.14 2.382-.14 4.289v6a2.25 2.25 0 0 0 1.521 2.13c-.021-.61-.021-1.3-.021-2.075v-5.11c0-1.367 0-2.47.117-3.337.12-.9.38-1.658.981-2.26.602-.602 1.36-.86 2.26-.981.867-.117 1.97-.117 3.337-.117h3.11c.775 0 1.464 0 2.074.021ZM7.408 6.41c.277-.277.665-.457 1.4-.556.754-.101 1.756-.103 3.191-.103h3c1.435 0 2.436.002 3.192.103.734.099 1.122.28 1.399.556.277.277.457.665.556 1.4.101.754.103 1.756.103 3.191v5c0 1.435-.002 2.436-.103 3.192-.099.734-.28 1.122-.556 1.399-.277.277-.665.457-1.4.556-.755.101-1.756.103-3.191.103h-3c-1.435 0-2.437-.002-3.192-.103-.734-.099-1.122-.28-1.399-.556-.277-.277-.457-.665-.556-1.4-.101-.755-.103-1.756-.103-3.191v-5c0-1.435.002-2.437.103-3.192.099-.734.28-1.122.556-1.399Z' clip-rule='evenodd'/%3E%3C/svg%3E");
   }
-  .ui-header__logo svg {
-    width: 192px;
+
+  .ui-code__code {
+    padding: 20px;
+    position: relative;
+    background-color: #e3d6f2;
+    border-radius: 0 16px 16px 16px;
+    border: 1px solid var(--ui-color-border-second);
   }
-  .ui-footer {
-    padding: 12px 0 20px;
+
+  .ui-code__code .astro-code {
     width: 100%;
+    margin: 0;
+    padding: 10px;
+    border-radius: 6px;
+    scrollbar-color: var(--ui-color-text-second) transparent;
+    scrollbar-width: thin;
   }
-  .ui-footer__text {
-    text-align: right;
-    font-size: 16px;
-    line-height: 19px;
-    opacity: 0.6;
+
+  .ui-code__code .astro-code::-webkit-scrollbar {
+    height: 8px;
   }
-  .ui-background-gray {
-    background-color: #808080;
+
+  .ui-code__code .astro-code::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  .ui-code__code .astro-code::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    background-color: var(--ui-color-text-second);
+    border: 2px solid #282c34;
+  }
+
+  .ui-code__code .astro-code::-webkit-scrollbar-thumb:hover {
+    background-color: var(--ui-color-text-second-a80);
+  }
+
+  @media (max-width: 767px) {
+    :root {
+      --ui-container-offset: 16px;
+      --ui-fixed-menu-width: 100%;
+    }
+
+    .ui__section {
+      margin-bottom: 0;
+    }
+
+    .ui__component-wrap {
+      margin: 0 calc(var(--ui-container-offset) * -1);
+      border-radius: 0;
+    }
+
+    .ui__section:not(:has(.ui-container)) .ui__component-wrap {
+      margin: 0;
+    }
+    .ui-code__title {
+      padding: 5px 20px 5px 10px;
+      margin-right: -10px;
+    }
+    .ui-code__copy {
+      padding: 5px 10px;
+    }
+
+    .ui-code__code {
+      padding: 20px 10px;
+    }
   }
 </style>
 
 <script is:inline>
-  const getAnchorId = (index) => `section-${index}`
-  const sections = [...document.querySelectorAll('[data-ui-section]')]
-  const nav = document.querySelector('[data-ui-nav]')
-  const toggle = document.querySelector('[data-ui-nav-toggle]')
-  let list = null
-
-  const createAnchorsId = () => {
-    sections.forEach((section, index) => {
-      section.id = getAnchorId(index)
+  // Кнопки копирования
+  function showCopyMessage(btn, message) {
+    requestAnimationFrame(() => {
+      btn.textContent = message
+      setTimeout(() => {
+        btn.textContent = btn.dataset.copyMessage
+      }, 3000)
     })
   }
+  document.addEventListener('click', (evt) => {
+    const copyBtn = evt.target.closest('[data-ui-copy]')
+    if (!copyBtn) return
+    navigator.clipboard
+      .writeText(copyBtn.dataset.uiCopy)
+      .then(() => {
+        showCopyMessage(copyBtn, 'Скопированно')
+      })
+      .catch(() => {
+        showCopyMessage(copyBtn, 'Ошибка копирования')
+      })
+  })
 
-  const getItemTemplate = (item, index) => {
-    const title = item.querySelector('[data-ui-title]')
-    return `
-        <li>
-          <a href='#${getAnchorId(index)}'>${title.innerHTML}</a>
-    </li>
-  `
+  // Модальное окно навигации
+  const burgerElem = document.querySelector('[data-ui-burger]')
+  const navDialog = document.querySelector('[data-ui-nav-dialog]')
+  const closeElem = document.querySelector('[data-ui-burger-close]')
+  const fixedBlockElements = document.querySelectorAll('[data-fix-block]')
+
+  closeElem.addEventListener('click', closeUiDialogOnClick)
+  burgerElem.addEventListener('click', openUiDialogOnClick)
+  navDialog.addEventListener('click', closeOnBackDropClick)
+  navDialog.addEventListener('close', closeUiDialogOnClick)
+
+  function getScrollbarWidth() {
+    return window.innerWidth - document.documentElement.clientWidth
   }
 
-  const createList = () => {
-    sections.forEach((section, index) => {
-      list.insertAdjacentHTML('beforeend', getItemTemplate(section, index))
+  function enableScrolling() {
+    fixedBlockElements.forEach((block) => {
+      block.style.marginRight = null
     })
+    document.body.classList.remove('scroll-lock')
+    document.documentElement.style.removeProperty('--scrollbar-width')
   }
 
-  const initPageNavigation = () => {
-    if (!sections.length || !nav || !toggle) return
-    list = nav.querySelector('ul')
-    if (!list) return
-
-    createList()
-    createAnchorsId()
-    toggle.addEventListener('click', () => {
-      if (nav.classList.contains('is-open')) {
-        nav.classList.remove('is-open')
-        toggle.innerHTML = '+'
-      } else {
-        nav.classList.add('is-open')
-        toggle.innerHTML = '-'
-      }
+  function disableScrolling() {
+    document.documentElement.style.setProperty(
+      '--scrollbar-width',
+      `${getScrollbarWidth()}px`
+    )
+    fixedBlockElements.forEach((block) => {
+      block.style.marginRight = `${getScrollbarWidth()}px`
     })
+    document.body.classList.add('scroll-lock')
   }
 
-  initPageNavigation()
+  function closeUiDialogOnClick() {
+    navDialog.close()
+    navDialog.setAttribute('inert', '')
+    enableScrolling()
+  }
+
+  function openUiDialogOnClick() {
+    disableScrolling()
+    navDialog.showModal()
+    navDialog.removeAttribute('inert')
+  }
+
+  function closeOnBackDropClick({ target }) {
+    const isClickedOnBackDrop = target === navDialog
+    if (isClickedOnBackDrop) {
+      closeUiDialogOnClick()
+    }
+  }
 </script>

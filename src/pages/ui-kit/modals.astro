@@ -1,0 +1,34 @@
+---
+import UIKitLayout from '@layouts/UI-kit/UI-kit'
+import Button from '@ui/Button/Button'
+import Modal from '@components/Modal/Modal'
+import UiCode from '@ui/UiCode/UiCode'
+
+const uiPageTitle = 'Модалки'
+---
+
+<UIKitLayout title={uiPageTitle}>
+  <section class="ui__section">
+    <div class="ui-container">
+      <div class="ui__component-wrap">
+        <Button text="Стандартная модалка" modal="example" />
+        <UiCode
+          code={`<Button text="Стандартная модалка" modal="example" />
+
+<Fragment slot="modals">
+  <Modal name="example">
+    <h1>Example modal</h1>
+  </Modal>
+</Fragment>
+`}
+        />
+      </div>
+    </div>
+  </section>
+
+  <Fragment slot="modals">
+    <Modal name="example">
+      <h1>Example modal</h1>
+    </Modal>
+  </Fragment>
+</UIKitLayout>

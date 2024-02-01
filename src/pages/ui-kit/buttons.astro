@@ -1,0 +1,38 @@
+---
+import UIKitLayout from '@layouts/UI-kit/UI-kit'
+import Button from '@ui/Button/Button'
+import UiCode from '@ui/UiCode/UiCode'
+
+const uiPageTitle = 'Кнопки'
+---
+
+<UIKitLayout title={uiPageTitle}>
+  <section class="ui__section">
+    <div class="ui-container">
+      <div class="ui__component-wrap">
+        <Button text="Классическая кнопка" />
+        <UiCode code={'<Button text="Классическая кнопка" />'} />
+      </div>
+      <div class="ui__component-wrap">
+        <Button icon="icon-close" text="Кнопка с иконкой" />
+        <UiCode code={'<Button icon="icon-close" text="Кнопка с иконкой" />'} />
+      </div>
+      <div class="ui__component-wrap">
+        <Button icon="arrow-left" iconPosBefore text="Кнопка с иконкой" />
+        <UiCode
+          code={'<Button icon="arrow-left" iconPosBefore text="Кнопка с иконкой" />'}
+        />
+      </div>
+      <div class="ui__component-wrap">
+        <Button mods={['fill']} text="Кнопка с фоном" />
+        <UiCode code={'<Button mods={[\'fill\']} text="Кнопка с фоном" />'} />
+      </div>
+      <div class="ui__component-wrap">
+        <Button mods={['fill']} as="a" href="#" text="Кнопка ссылка" />
+        <UiCode
+          code={'<Button mods={[\'fill\']} as="a" href="#" text="Кнопка ссылка" />'}
+        />
+      </div>
+    </div>
+  </section>
+</UIKitLayout>

@@ -1,31 +1,33 @@
 .title {
   margin: 0;
-  font-size: 38px;
-  line-height: 100%;
-  font-weight: 600;
-  color: var(--color-fedora);
+  line-height: 1.4;
+  font-weight: 700;
 
-  &--xl {
+  &--h1 {
     font-size: 58px;
   }
 
-  &--lg {
+  &--h2 {
     font-size: 48px;
   }
 
-  &--md {
+  &--h3 {
     font-size: 38px;
   }
 
-  &--sm {
+  &--h4 {
     font-size: 28px;
   }
 
-  &--xs {
-    font-size: 18px;
+  &--h5 {
+    font-size: 20px;
   }
 
-  &--xxs {
+  &--h6 {
     font-size: 16px;
+  }
+
+  &--uppercase {
+    text-transform: uppercase;
   }
 }

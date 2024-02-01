@@ -25,7 +25,7 @@ html {
   text-rendering: optimizeLegibility;
   // если по прежнему есть проблемы с выравниванием
   // https://transfonter.org/ - включите настройку https://prnt.sc/12rnt6g и переконвертируйте шрифт
-  scroll-behavior: smooth;
+  @include scroll-smooth;
 }
 
 body {
@@ -140,4 +140,9 @@ button,
 [type="reset"],
 [type="submit"] {
   appearance: none;
+}
+
+dialog {
+  max-width: none;
+  max-height: none;
 }

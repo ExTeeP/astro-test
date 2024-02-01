@@ -1,0 +1,27 @@
+---
+import { Code } from 'astro:components'
+
+interface Props {
+  code: string
+  lang?: 'astro' | 'js' | 'ts' | 'jsx' | 'tsx'
+  theme?: 'one-dark-pro' | 'solarized-light'
+}
+
+const { lang = 'astro', code, theme = 'one-dark-pro' } = Astro.props
+---
+
+<figure class="ui-code">
+  <header class="ui-code__header">
+    <figcaption class="ui-code__tab ui-code__title">{`<${lang}>`}</figcaption>
+    <button
+      class="ui-code__tab ui-code__copy"
+      data-ui-copy={code}
+      data-copy-message="Скопировать"
+    >
+      Скопировать
+    </button>
+  </header>
+  <div class="ui-code__code">
+    <Code lang={lang} theme={theme} code={code} />
+  </div>
+</figure>

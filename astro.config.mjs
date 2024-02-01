@@ -2,37 +2,19 @@ import { defineConfig, squooshImageService } from 'astro/config'
 import viteSassGlob from 'vite-plugin-sass-glob-import'
 import icon from 'astro-icon'
 
-// const outputPluginStats = () => ({
-//   name: 'output-plugin-stats',
-//   configResolved(config) {
-//     const plugins = config.plugins.map((plugin) => plugin.name)
-//     console.log(`Your project has ${plugins.length} Vite plugins.`)
-//     console.table(plugins)
-//   }
-// }) // показывает все подключенные плагины
-
-// const noAttr = () => {
-//   return ({
-//     name: 'no-attribute',
-//     enforce: 'post',
-//     transformIndexHtml(html) {
-//       return html.replace('type="module"', '')
-//     },
-//   })
-// } // должен убирать type="module" из тега скрипт
+const SITE = 'https://lorganium.ru'
+const ASSETS_PREFIX = process.env.NODE_ENV === 'production' ? SITE : '.'
 
 // https://astro.build/config
 export default defineConfig({
   devToolbar: { enabled: false },
-  site: 'https://htmlonelove.github.io',
+  site: SITE,
   compressHTML: false,
   output: 'static',
-  publicDir: './public',
   build: {
-    format: 'file', // вытаскивает вложенные страницы в корень src/pages/subpage/subpage.html => dist/subpage.html
+    format: 'file',
     assets: 'assets', // собирает скрипты и стили в папку dist/assets
-    assetsPrefix: '.', // добавляет `.` в пути скриптов и стилей
-    // inlineStylesheets: 'never', // запрещает инлайн стилей
+    assetsPrefix: ASSETS_PREFIX, // добавляет `.` в пути скриптов и стилей
   },
   image: {
     service: squooshImageService(),

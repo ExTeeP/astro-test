@@ -1,51 +1,159 @@
 ---
-import Container from '@components/Container/Container'
-import Modal from '@components/Modal/Modal'
 import UIKitLayout from '@layouts/UI-kit/UI-kit'
-import Button from '@ui/Button/Button'
-import Title from '@ui/Title/Title'
+import UiCode from '@ui/UiCode/UiCode'
+import { Image } from 'astro:assets'
 ---
 
 <UIKitLayout>
-  <div class="ui">
-    <Container>
-      <h1 class="ui-title">UI-kit</h1>
-      <section data-ui-section>
-        <h2 class="ui__title" data-ui-title>Заголовки</h2>
-        <Title text="Title size=`xl`" as="h1" size="xl" />
-        <Title text="Title size=`lg`" as="h2" size="lg" />
-        <Title text="Title size=`md`" as="h3" size="md" />
-        <Title text="Title size=`sm`" as="p" size="sm" />
-        <Title
-          text="Title size=`sm` --uppercase"
-          as="p"
-          size="sm"
-          mods={['uppercase']}
-        />
-      </section>
-      <section data-ui-section>
-        <h2 class="ui__title" data-ui-title>Кнопки</h2>
-        <Button text="Классическая кнопка" />
-        <Button icon="icon-close" text="Кнопка с иконкой" />
-        <Button icon="arrow-left" iconPosBefore text="Кнопка с иконкой" />
-        <Button mods={['fill']} text="Кнопка с фоном" />
-        <Button mods={['fill']} as="a" href="#" text="Кнопка ссылка" />
-      </section>
-      <section data-ui-section>
-        <h2 class="ui__title" data-ui-title>Модалки</h2>
-        <Button text="Стандартная модалка" modal="example" />
-      </section>
-    </Container>
+  <section class="ui__section">
+    <div class="ui-container">
+      <div class="ui__component-wrap">
+        <p>Светлая обертка</p>
+        <div class="ui__component">
+          <Image
+            src="https://i.imgur.com/PGmsWjq.jpg"
+            alt="Example image."
+            width={1920}
+            height={403}
+          />
+        </div>
+        <UiCode
+          code={`<section class="ui__section">
+  <div class="ui-container">
+    <div class="ui__component-wrap">
+      <div class="ui__component">
+        <ComponentName attr="name" />
+      </div>
+      <UiCode code={'<ComponentName attr="name" />'} />
+    </div>
   </div>
-  <Modal name="example">
-    <h1>Example modal</h1>
-  </Modal>
-</UIKitLayout>
-
-<!--
-  для работы навигации необходимо проставить дата атрибуты:
-  <section data-ui-section>
-    <h2 class="ui__title" data-ui-title>Заголовки</h2>
-    ...
+</section>`}
+        />
+      </div>
+    </div>
   </section>
--->
+
+  <section class="ui__section">
+    <div class="ui-container">
+      <div class="ui__component-wrap ui__component-wrap--dark">
+        <p>Тёмная оберка</p>
+        <div class="ui__component">
+          <Image
+            src="https://i.imgur.com/PGmsWjq.jpg"
+            alt="Example image."
+            width={1920}
+            height={403}
+          />
+        </div>
+        <UiCode
+          code={`<section class="ui__section">
+  <div class="ui-container">
+    <div class="ui__component-wrap ui__component-wrap--dark">
+      <div class="ui__component">
+        <ComponentName attr="name" />
+      </div>
+      <UiCode code={'<ComponentName attr="name" />'} />
+    </div>
+  </div>
+</section>`}
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="ui__section">
+    <div class="ui__component-wrap">
+      <p>Без блока контейнера: светлая</p>
+      <div class="ui__component">
+        <Image
+          src="https://i.imgur.com/PGmsWjq.jpg"
+          alt="Example image."
+          width={1920}
+          height={403}
+        />
+      </div>
+      <UiCode
+        code={`<section class="ui__section">
+  <div class="ui__component-wrap">
+    <div class="ui__component">
+      <ComponentName attr="name" />
+    </div>
+    <UiCode code={'<ComponentName attr="name" />'} />
+  </div>
+</section>`}
+      />
+    </div>
+  </section>
+
+  <section class="ui__section">
+    <div class="ui__component-wrap ui__component-wrap--dark">
+      <p>Без блока контейнера: тёмная</p>
+      <div class="ui__component">
+        <Image
+          src="https://i.imgur.com/PGmsWjq.jpg"
+          alt="Example image."
+          width={1920}
+          height={403}
+        />
+      </div>
+      <UiCode
+        code={`<section class="ui__section">
+  <div class="ui__component-wrap ui__component-wrap--dark">
+    <div class="ui__component">
+      <ComponentName attr="name" />
+    </div>
+    <UiCode code={'<ComponentName attr="name" />'} />
+  </div>
+</section>`}
+      />
+    </div>
+  </section>
+
+  <section class="ui__section">
+    <div class="ui__component-wrap">
+      <p>Без блока контейнера, компонент на весь экран: светлая</p>
+      <div class="ui__component ui__component--full">
+        <Image
+          src="https://i.imgur.com/PGmsWjq.jpg"
+          alt="Example image."
+          width={1920}
+          height={403}
+        />
+      </div>
+      <UiCode
+        code={`<section class="ui__section">
+  <div class="ui__component-wrap">
+    <div class="ui__component ui__component--full">
+      <ComponentName attr="name" />
+    </div>
+    <UiCode code={'<ComponentName attr="name" />'} />
+  </div>
+</section>`}
+      />
+    </div>
+  </section>
+
+  <section class="ui__section">
+    <div class="ui__component-wrap ui__component-wrap--dark">
+      <p>Без блока контейнера, компонент на весь экран: тёмная</p>
+      <div class="ui__component ui__component--full">
+        <Image
+          src="https://i.imgur.com/PGmsWjq.jpg"
+          alt="Example image."
+          width={1920}
+          height={403}
+        />
+      </div>
+      <UiCode
+        code={`<section class="ui__section">
+  <div class="ui__component-wrap ui__component-wrap--dark">
+    <div class="ui__component ui__component--full">
+      <ComponentName attr="name" />
+    </div>
+    <UiCode code={'<ComponentName attr="name" />'} />
+  </div>
+</section>`}
+      />
+    </div>
+  </section>
+</UIKitLayout>

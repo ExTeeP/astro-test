@@ -5,7 +5,7 @@ type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }> & {
   text: string
   className?: string
   mods?: string[]
-  size?: 'xl' | 'lg' | 'md' | 'sm' | 'xs' | 'xxs'
+  size?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
 }
 
 const { as: Tag = 'h1', text, className, size, mods, ...props } = Astro.props
@@ -15,7 +15,8 @@ const { as: Tag = 'h1', text, className, size, mods, ...props } = Astro.props
   class:list={[
     'title',
     size && `title--${size}`,
-    mods?.map((el: string) => `title--${el}`, className)
+    mods?.map((el: string) => `title--${el}`),
+    className
   ]}
   {...props}
   set:html={text}
