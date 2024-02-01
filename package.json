@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@astrojs/prism": "^3.0.0",
-    "astro": "^4.2.1",
+    "astro": "^4.3.0",
     "scroll-lock": "2.1.5",
     "swiper": "9.4.1"
   },
