@@ -26,7 +26,7 @@ const pageTitle = title ? title : 'UI-kit'
     <div class="ui__content" data-ui-content>
       <header class="ui__header" data-fix-block>
         <div class="ui-container">
-          <a href=`${getCurrentUrl()}/sitemap.html` class="ui__header-logo">
+          <a href="/sitemap.html" class="ui__header-logo">
             <svg
               xmlns="https://www.w3.org/2000/svg"
               width="192"
@@ -80,8 +80,7 @@ const pageTitle = title ? title : 'UI-kit'
   <dialog class="ui-dialog" aria-label="Навигация" inert data-ui-nav-dialog>
     <nav class="ui-nav">
       <header class="ui-nav__header">
-        <a class="ui-nav__title" href=`${getCurrentUrl()}/ui-kit.html`>UI-Kit</a
-        >
+        <a class="ui-nav__title" href="/ui-kit.html">UI-Kit</a>
         <button
           class="ui-burger ui-burger--close"
           type="button"
@@ -95,7 +94,7 @@ const pageTitle = title ? title : 'UI-kit'
         {
           pageList.map((item) => (
             <li class="ui-nav__item">
-              <a href={`${getCurrentUrl()}/${item.name}.html`}>{item.title}</a>
+              <a href={`/ui-kit/${item.name}.html`}>{item.title}</a>
             </li>
           ))
         }
